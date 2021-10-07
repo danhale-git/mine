@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"path/filepath"
 
@@ -50,7 +51,7 @@ func Init() error {
 					/*if i > c {
 						return
 					}*/
-					_, err := w.GetBlock(x /*y*/, 3, z, 0)
+					b, err := w.GetBlock(x /*y*/, 3, z, 0)
 					if err != nil {
 						if errors.Is(err, &world.SubChunkNotSavedError{}) {
 							continue
@@ -59,6 +60,8 @@ func Init() error {
 					}
 					i++
 					time.Sleep(100)
+
+					fmt.Println(b)
 					//}
 				}
 			}

@@ -126,9 +126,42 @@ func readStateIndices(r io.Reader) ([]int, error) {
 			indices[i] = int((word >> ((i % blocksPerWord) * bitsPerBlock)) & ((1 << bitsPerBlock) - 1))
 			i++
 		}
+
+		/*if err := decodeWord(r, i, bitsPerBlock, blocksPerWord, indices); err != nil {
+			return nil, fmt.Errorf("decoding word %d: %s", w, err)
+		}
+		i += blocksPerWord*/
 	}
 
 	return indices, nil
+}
+
+func decodeWord(r io.Reader, i, bitsPerBlock, blocksPerWord int, indices []int) error {
+	var word uint32
+	if err := readLittleEndian(r, &word); err != nil {
+		return fmt.Errorf("reading raw data: %s", err)
+	}
+
+	for b := 0; b < blocksPerWord && i < BlockCount; b++ {
+		indices[i] = int((word >> ((i % blocksPerWord) * bitsPerBlock)) & ((1 << bitsPerBlock) - 1))
+
+		i++
+	}
+
+	return nil
+
+	/*if w < 8 { //DEBUG
+		s := strconv.FormatInt(int64(word), 2)
+		fmt.Printf("word %d: %032s", w, s)
+		fmt.Println(" -    bpb:", bitsPerBlock, "   bpw:", blocksPerWord, "   n:", word)
+	}
+
+	for b := 0; b < blocksPerWord && i < BlockCount; b++ {
+		if w == 0 { //DEBUG
+			//s := strconv.FormatInt(int64((word>>((i%blocksPerWord)*bitsPerBlock))&((1<<bitsPerBlock)-1)), 2)
+			//fmt.Printf("%d:\t%064s\n", i, s)
+		}
+	}*/
 }
 
 // readStatePalette reads the remainder of a subchunk record and returns a slice of tags. It should be called after blockStorageCount and

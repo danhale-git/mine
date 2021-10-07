@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"strconv"
 
 	"github.com/icza/bitio"
 )
@@ -74,6 +75,7 @@ func writeStateIndices(w io.Writer, storage *blockStorage) error {
 	for wc := 0; wc < wordCount; wc++ {
 		buf := bytes.NewBuffer(make([]byte, 4))
 		bw := bitio.NewWriter(buf)
+		//var word uint32
 		for b := 0; b < blocksPerWord; b++ {
 			if err := bw.WriteBits(uint64(storage.Indices[i]), bitsPerBlock); err != nil {
 				return fmt.Errorf("writing block number %d: %w to 32 bit integer", i, err)
@@ -84,9 +86,50 @@ func writeStateIndices(w io.Writer, storage *blockStorage) error {
 		if err := writeLittleEndian(w, buf.Bytes()); err != nil {
 			return fmt.Errorf("writing 32 bit integer to block storage byte slice: %w", err)
 		}
+
+		if wc == 0 {
+			fmt.Print("write: ")
+			for _, bt := range buf.Bytes() {
+				fmt.Printf("%08b", bt)
+			}
+			fmt.Println()
+		}
 	}
 
 	return nil
+}
+
+func encodeWord(indices []int, bitsPerBlock, blocksPerWord int) uint32 {
+	var word uint32
+	for i := len(indices) - 1; i >= 0; i-- {
+		idx := uint32(indices[i])
+
+		word = word << bitsPerBlock
+		word = word | idx
+
+		//s := strconv.FormatInt(int64(idx), 2)
+		//fmt.Printf("%s: %03s", "index:", s)
+		//PrintNum32(word, "   word:")
+	}
+
+	// go test -v -run TestBitStuff
+	// go test -v -run TestReadStateIndices
+
+	return word
+}
+
+func PrintNum32(n uint32, msg string) {
+	s := strconv.FormatInt(int64(n), 2)
+	fmt.Printf("%s: %032s\n", msg, s)
+}
+
+func PrintNum32Bits(n uint32, msg string) {
+
+}
+
+func PrintNum(n int, msg string) {
+	s := strconv.FormatInt(int64(n), 2)
+	fmt.Printf("%s: %032s\n", msg, s)
 }
 
 func writeLittleEndian(w io.Writer, data interface{}) error {

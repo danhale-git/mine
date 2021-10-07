@@ -11,6 +11,11 @@ import (
 
 const (
 	StorageCount = 2
+
+	BitsPerBlock   = 3
+	StorageVersion = 0
+	BlocksPerWord  = 10
+	WordCount      = 410
 )
 
 // old test data from a random chunk
