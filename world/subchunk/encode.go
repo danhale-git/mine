@@ -123,10 +123,6 @@ func PrintNum32(n uint32, msg string) {
 	fmt.Printf("%s: %032s\n", msg, s)
 }
 
-func PrintNum32Bits(n uint32, msg string) {
-
-}
-
 func PrintNum(n int, msg string) {
 	s := strconv.FormatInt(int64(n), 2)
 	fmt.Printf("%s: %032s\n", msg, s)

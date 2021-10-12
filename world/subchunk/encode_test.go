@@ -2,6 +2,7 @@ package subchunk
 
 import (
 	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/danhale-git/mine/mock"
@@ -73,7 +74,12 @@ func TestEncodeWord(t *testing.T) {
 			mock.BlocksPerWord,
 		)
 
-		fmt.Println(indices)
+		fmt.Print("Word *: ")
+		for _, idx := range indices {
+			s := strconv.FormatInt(int64(idx), 2)
+			fmt.Printf("%03s", s)
+		}
+		fmt.Println()
 
 		//if err := decodeWord(readli)
 
