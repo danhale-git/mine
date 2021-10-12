@@ -1,12 +1,10 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"path/filepath"
-
-	"time"
+	"strconv"
 
 	"github.com/danhale-git/mine/world"
 	"github.com/spf13/cobra"
@@ -16,6 +14,7 @@ const worldDirPath = `C:\Users\danha\AppData\Local\Packages\Microsoft.MinecraftU
 
 //const worldFileName = `VsgSYaaGAAA=` // MINETEST  16 64 16
 const worldFileName = `97caYQjdAgA=` // MINETESTFLAT 0 0 0
+// TODO: Why does chunk 0 0 0 have a bkock storage version of 9?
 
 func Init() error {
 	root := &cobra.Command{
@@ -27,7 +26,7 @@ func Init() error {
 				log.Fatal(err)
 			}
 
-			/*b, err := w.GetBlock(
+			b, err := w.GetBlock(
 				atoi(args[0]),
 				atoi(args[1]),
 				atoi(args[2]),
@@ -37,45 +36,42 @@ func Init() error {
 				log.Fatal(err)
 			}
 
-			fmt.Println(b)*/
+			fmt.Println(b)
 
 			/*c, err := strconv.Atoi(args[0])
 			if err != nil {
 				log.Fatalf("invalid argument '%s': %s", args[0], err)
 			}*/
 
-			i := 0
+			/*i := 0
 			for x := 0; x < 16; x++ {
 				for z := 0; z < 16; z++ {
-					//for y := 0; y < 16; y++ {
-					/*if i > c {
-						return
-					}*/
-					b, err := w.GetBlock(x /*y*/, 3, z, 0)
-					if err != nil {
-						if errors.Is(err, &world.SubChunkNotSavedError{}) {
-							continue
+					for y := 0; y < 16; y++ {
+						b, err := w.GetBlock(x, y, z, 0)
+						if err != nil {
+							if errors.Is(err, &world.SubChunkNotSavedError{}) {
+								continue
+							}
+							log.Fatal(err)
 						}
-						log.Fatal(err)
-					}
-					i++
-					time.Sleep(100)
+						i++
+						time.Sleep(100)
 
-					fmt.Println(b)
-					//}
+						fmt.Println(b)
+					}
 				}
-			}
+			}*/
 		},
 	}
 
 	return root.Execute()
 }
 
-/*func atoi(s string) int {
+func atoi(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
 		log.Fatalf("invalid arg: '%s'", s)
 	}
 
 	return i
-}*/
+}
